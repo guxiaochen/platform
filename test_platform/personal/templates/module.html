@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">测试平台</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Settings</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <input type="text" class="form-control" placeholder="Search...">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li><a href="/project">
+                    <i class="glyphicon glyphicon-th-large"></i>
+                    &nbsp&nbsp项目管理
+                </a></li>
+                <li class="active"><a href="/module/"><i class="glyphicon glyphicon-list"></i>&nbsp&nbsp模块管理</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li><a href="">用例管理</a></li>
+                <li><a href="">任务管理</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+                <li><a href="">mkck server</a></li>
+                <li><a href="">测试工具</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            {% if type == "list" %}
+            <h3 class="sub-header">模块列表
+                <button type="button" class="btn btn-primary" style="float:right"
+                        onclick="location.href='/module/add_module'">新增
+                </button>
+            </h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>模块名称</th>
+                        <th>描述</th>
+                        <th>状态</th>
+                        <th>所属项目</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for module in modules %}
+                    <tr>
+                        <td>{{module.id}}</td>
+                        <td>{{module.name}}</td>
+                        <td>{{module.describe}}</td>
+                        <td>{{module.project}}</td>
+                        <td>
+                            <!--                    开启结束转换-->
+                            {% if module.status == True%}
+                            <span>开启</span>
+                            {% else %}
+                            <span>关闭</span>
+                            {% endif %}
+                        </td>
+
+
+                        <!--                  日期时间格式化-->
+                        <td>{{ module.create_time | date:"Y-m-d H:i:s"}}</td>
+                        <td>
+                            <a href="/module/edit_module/{{ module.id }}/" style="margin-right:30px">编辑</a>
+                            <a href="/module/del_module/{{ module.id }}/">删除</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <!--            增加项目-->
+            {% if type == "add" %}
+            <h3 class="sub-header">增加模块</h3>
+            <form class="form-horizontal" method="post" action="/module/add_module/">
+                <p class="control-group">
+                    <label class="control-label" for="input01">项目名称</label>
+                    <span class="controls">
+                        {{ form.project }}
+                    </span>
+
+                </p>
+
+                <p class="control-group">
+                    <label class="control-label" for="input01">名称</label>
+                    <span class="controls">
+                        {{ form.name }}
+                    </span>
+
+                </p>
+
+                <p class="control-group" >
+                    <label class="control-label" for="input01">描述</label>
+                    <span class="controls">
+                        {{ form.describe }}
+                    </span>
+
+                </p>
+
+                <p class="control-group">
+                    <label class="control-label" for="input01">状态</label>
+                    <span class="controls">
+                        {{ form.status }}
+                    <span/>
+
+                </p>
+
+                <div class="control-group" style="margin-left:80px">
+                    <div class="controls">
+                        <button class="btn btn-success" type="submit">提交</button>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+
+
+<!--            修改模块-->
+            {% if type == "edit" %}
+            <h3 class="sub-header">编辑模块</h3>
+            <form action="" method="post" action="/module/edit_module/{{ module.id }}/{id}">
+                {{ form.as_p }}
+                <input type="submit" value="Submit">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
